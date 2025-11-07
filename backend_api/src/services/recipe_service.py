@@ -14,15 +14,6 @@ class RecipeService:
     def __init__(self) -> None:
         self.repo = memory_recipe_repo
 
-
-def recipe_service() -> "RecipeService":
-    """
-    PUBLIC_INTERFACE
-    FastAPI dependency provider for RecipeService.
-    Returns a new instance backed by the in-memory repository.
-    """
-    return RecipeService()
-
     # PUBLIC_INTERFACE
     def list_recipes(
         self, page: int, page_size: int, tags: List[str] | None, cuisine: str | None, time_max: int | None
@@ -104,3 +95,12 @@ def recipe_service() -> "RecipeService":
         if time_max:
             filtered = [it for it in filtered if (it.get("time_minutes") or 10**9) <= time_max]
         return filtered
+
+
+def recipe_service() -> "RecipeService":
+    """
+    PUBLIC_INTERFACE
+    FastAPI dependency provider for RecipeService.
+    Returns a new instance backed by the in-memory repository.
+    """
+    return RecipeService()
