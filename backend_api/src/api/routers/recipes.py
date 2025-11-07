@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Path, Query, status
+from fastapi import APIRouter, Depends, Path, Query, status, Response
 
 from src.core.pagination import Page
 from src.core.security import get_current_user
@@ -93,7 +93,7 @@ def update_recipe(
     return service.update_recipe(recipe_id=recipe_id, user_id=current_user.id, data=payload)
 
 
-from fastapi import Response
+
 
 @router.delete(
     "/{recipe_id}",
@@ -104,13 +104,14 @@ def delete_recipe(
     recipe_id: str = Path(...),
     current_user=Depends(get_current_user),
     service: Annotated[RecipeService, Depends(recipe_service)] = None,
-) -> Response:
+):
     """
     PUBLIC_INTERFACE
     Delete a recipe. Only the owner can delete.
     Returns 204 No Content with an empty body.
     """
     service.delete_recipe(recipe_id=recipe_id, user_id=current_user.id)
+    # Per FastAPI/Starlette, 204 responses must not include a body.
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
