@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Path, Query, status, Response
+from fastapi import APIRouter, Depends, Path, Query, status, Response as FastAPIResponse
 
 from src.core.pagination import Page
 from src.core.security import get_current_user
@@ -110,9 +110,10 @@ def delete_recipe(
     Delete a recipe. Only the owner can delete.
     Returns 204 No Content with an empty body.
     """
+    # Perform delete then return an empty Response with 204 status. Do not declare a response_model
+    # and do not include any body for 204 responses to comply with FastAPI/Starlette assertions.
     service.delete_recipe(recipe_id=recipe_id, user_id=current_user.id)
-    # Per FastAPI/Starlette, 204 responses must not include a body.
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return FastAPIResponse(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post(
