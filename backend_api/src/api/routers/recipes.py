@@ -93,6 +93,8 @@ def update_recipe(
     return service.update_recipe(recipe_id=recipe_id, user_id=current_user.id, data=payload)
 
 
+from fastapi import Response
+
 @router.delete(
     "/{recipe_id}",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -102,13 +104,14 @@ def delete_recipe(
     recipe_id: str = Path(...),
     current_user=Depends(get_current_user),
     service: Annotated[RecipeService, Depends(recipe_service)] = None,
-) -> None:
+) -> Response:
     """
     PUBLIC_INTERFACE
     Delete a recipe. Only the owner can delete.
+    Returns 204 No Content with an empty body.
     """
     service.delete_recipe(recipe_id=recipe_id, user_id=current_user.id)
-    return None
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post(
